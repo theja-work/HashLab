@@ -17,6 +17,11 @@ struct AuthResponse : Decodable {
     let token: String
 }
 
+struct AuthErrorResponse : Decodable {
+    let success: Bool
+    let message: String
+}
+
 struct SignupResponse: Decodable {
     let success: Bool
     let message: String
@@ -67,10 +72,13 @@ final class AuthService : AuthServiceProtocol {
           
         case 401 :
             
-            let error = try JSONDecoder().decode(AuthResponse.self , from: data)
+            let error = try JSONDecoder().decode(AuthErrorResponse.self , from: data)
+            
+            Logger.log(error.message)
+            print(error.message)
             
             throw NSError(domain: "", code: 401, userInfo: [
-                NSLocalizedDescriptionKey: error.token
+                NSLocalizedDescriptionKey: error.message
             ])
             
         default :

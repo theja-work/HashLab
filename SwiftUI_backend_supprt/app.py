@@ -16,20 +16,19 @@ def generate_hash(password):
         password.encode("utf-8")
     )
     
-def fetch_user_hash(username):
+def fetch_user(username):
 
     conn = sqlite3.connect("users.db")
-
     cursor = conn.cursor()
 
     cursor.execute(
         """
-        SELECT password_hash
+        SELECT id, username, password_hash
         FROM users
         WHERE username = ?
         """,
-                   (username,)
-                   )
+        (username,)
+    )
 
     result = cursor.fetchone()
 
@@ -39,25 +38,12 @@ def fetch_user_hash(username):
     
 def user_exists(username):
 
-    linn = sqlite3.connect("users.db")
+    user = fetch_user(username)
 
-    cursor = linn.cursor()
+    if user is not None:
+        return True, "User already exists"
 
-    cursor.execute(
-        """
-        SELECT id
-        FROM users
-        WHERE username = ?
-        """,
-        (username,)
-    )
-
-    result = cursor.fetchone()
-
-    linn.close()
-
-    return result is not None
-
+    return False, None
 
 def create_user(username, password):
 
@@ -81,21 +67,20 @@ def create_user(username, password):
     conn.commit()
     conn.close()
     
-def verify_credentials_helper(username,password):
+def verify_credentials_helper(username, password):
 
-    result = fetch_user_hash(username)
+    user = fetch_user(username)
 
-    if result is None:
-        return False
+    if user is None:
+        return False, "User does not exist"
 
-    stored_hash = result[0]
-    
+    stored_hash = user[2]
     generated_hash = generate_hash(password)
-    
-    print("Generated:", generated_hash)
-    print("Stored:", stored_hash)
 
-    return generated_hash == stored_hash
+    if generated_hash != stored_hash:
+        return False, "Incorrect password"
+
+    return True, None
     
 
 @app.route("/login", methods=["POST"])
@@ -106,18 +91,18 @@ def login():
     username = data.get("username")
     password = data.get("password")
     
-    is_valid = verify_credentials_helper(username,password)
-    
-    if is_valid:
-        return {
-            "success": True,
-            "token": "local-token-123"
-        }
+    is_valid, error = verify_credentials_helper(username, password)
 
+    if not is_valid:
+        return {
+            "success": False,
+            "message": error
+        }, 401
+    
     return {
-        "success": False,
-        "message": "Invalid Credentials"
-    }, 401
+        "success": True,
+        "token": "local-token-123"
+    }
     
     
 @app.route("/signup", methods=["POST"])
@@ -134,14 +119,15 @@ def signup():
             "success": False,
             "message": "Missing fields"
         }, 400
+    
+    exists, error = user_exists(username)
 
-    if user_exists(username):
-
+    if exists:
         return {
             "success": False,
-            "message": "User already exists"
+            "message": error
         }, 409
-
+    
     create_user(username, password)
 
     return {
