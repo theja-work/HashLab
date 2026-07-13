@@ -92,14 +92,6 @@ struct ContentView : View {
     }
 }
 
-struct HomeView : View {
-    var body: some View {
-        Text("Welcome Home 🚀")
-            .font(.largeTitle)
-            .bold()
-    }
-}
-
 #Preview {
     ContentView()
 }

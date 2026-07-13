@@ -134,6 +134,73 @@ def signup():
         "success": True,
         "message": "User created"
     }
+    
+def delete_user(username):
 
+    conn = sqlite3.connect("users.db")
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        DELETE FROM users
+        WHERE username = ?
+        """,
+        (username,)
+    )
+
+    conn.commit()
+
+    rows_deleted = cursor.rowcount
+
+    conn.close()
+
+    if rows_deleted == 0:
+        return False, "Unable to delete user"
+
+    return True, None
+    
+@app.route("/deleteAccount", methods=["DELETE"])
+def delete_account():
+
+    data = request.get_json()
+
+    username = data.get("username")
+    password = data.get("password")
+
+    if not username or not password:
+        return {
+            "success": False,
+            "message": "Username and password are required"
+        }, 400
+
+    is_valid, error = verify_credentials_helper(username, password)
+
+    if not is_valid:
+        return {
+            "success": False,
+            "message": error
+        }, 401
+
+    is_deleted, error = delete_user(username)
+
+    if not is_deleted:
+        return {
+            "success": False,
+            "message": error
+        }, 500
+        
+    is_confirmed, error = user_exists(username)
+
+    if not is_confirmed:
+        return {
+            "success": True,
+            "message": "Account deleted successfully"
+        }, 200
+
+    return {
+        "success": False,
+        "message": "Account deletion could not be confirmed"
+    }, 500
+    
 if __name__ == "__main__":
     app.run(debug=True)
