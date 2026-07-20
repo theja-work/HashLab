@@ -7,26 +7,26 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		2710D43D2F7970BD005028D3 /* SwiftUISample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftUISample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2710D43D2F7970BD005028D3 /* HashLab.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HashLab.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		2774ABDC2FE2B22D00AED538 /* Exceptions for "SwiftUISample" folder in "SwiftUISample" target */ = {
+		2774ABDC2FE2B22D00AED538 /* Exceptions for "HashLab" folder in "HashLab" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Application/Info.plist,
 			);
-			target = 2710D43C2F7970BD005028D3 /* SwiftUISample */;
+			target = 2710D43C2F7970BD005028D3 /* HashLab */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		2710D43F2F7970BD005028D3 /* SwiftUISample */ = {
+		2710D43F2F7970BD005028D3 /* HashLab */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				2774ABDC2FE2B22D00AED538 /* Exceptions for "SwiftUISample" folder in "SwiftUISample" target */,
+				2774ABDC2FE2B22D00AED538 /* Exceptions for "HashLab" folder in "HashLab" target */,
 			);
-			path = SwiftUISample;
+			path = HashLab;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -45,7 +45,7 @@
 		2710D4342F7970BD005028D3 = {
 			isa = PBXGroup;
 			children = (
-				2710D43F2F7970BD005028D3 /* SwiftUISample */,
+				2710D43F2F7970BD005028D3 /* HashLab */,
 				2710D43E2F7970BD005028D3 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -53,7 +53,7 @@
 		2710D43E2F7970BD005028D3 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				2710D43D2F7970BD005028D3 /* SwiftUISample.app */,
+				2710D43D2F7970BD005028D3 /* HashLab.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -61,9 +61,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		2710D43C2F7970BD005028D3 /* SwiftUISample */ = {
+		2710D43C2F7970BD005028D3 /* HashLab */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2710D4482F7970BF005028D3 /* Build configuration list for PBXNativeTarget "SwiftUISample" */;
+			buildConfigurationList = 2710D4482F7970BF005028D3 /* Build configuration list for PBXNativeTarget "HashLab" */;
 			buildPhases = (
 				2710D4392F7970BD005028D3 /* Sources */,
 				2710D43A2F7970BD005028D3 /* Frameworks */,
@@ -74,13 +74,13 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				2710D43F2F7970BD005028D3 /* SwiftUISample */,
+				2710D43F2F7970BD005028D3 /* HashLab */,
 			);
-			name = SwiftUISample;
+			name = HashLab;
 			packageProductDependencies = (
 			);
 			productName = SwiftUISample;
-			productReference = 2710D43D2F7970BD005028D3 /* SwiftUISample.app */;
+			productReference = 2710D43D2F7970BD005028D3 /* HashLab.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -98,7 +98,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 2710D4382F7970BD005028D3 /* Build configuration list for PBXProject "SwiftUISample" */;
+			buildConfigurationList = 2710D4382F7970BD005028D3 /* Build configuration list for PBXProject "HashLab" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -112,7 +112,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				2710D43C2F7970BD005028D3 /* SwiftUISample */,
+				2710D43C2F7970BD005028D3 /* HashLab */,
 			);
 		};
 /* End PBXProject section */
@@ -268,7 +268,7 @@
 				DEVELOPMENT_TEAM = YWJWSBVDP5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = SwiftUISample/Application/Info.plist;
+				INFOPLIST_FILE = HashLab/Application/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -304,7 +304,7 @@
 				DEVELOPMENT_TEAM = YWJWSBVDP5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = SwiftUISample/Application/Info.plist;
+				INFOPLIST_FILE = HashLab/Application/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -332,7 +332,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		2710D4382F7970BD005028D3 /* Build configuration list for PBXProject "SwiftUISample" */ = {
+		2710D4382F7970BD005028D3 /* Build configuration list for PBXProject "HashLab" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2710D4462F7970BF005028D3 /* Debug */,
@@ -341,7 +341,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2710D4482F7970BF005028D3 /* Build configuration list for PBXNativeTarget "SwiftUISample" */ = {
+		2710D4482F7970BF005028D3 /* Build configuration list for PBXNativeTarget "HashLab" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2710D4492F7970BF005028D3 /* Debug */,

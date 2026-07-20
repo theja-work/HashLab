@@ -16,9 +16,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2710D43C2F7970BD005028D3"
-               BuildableName = "SwiftUISample.app"
-               BlueprintName = "SwiftUISample"
-               ReferencedContainer = "container:SwiftUISample.xcodeproj">
+               BuildableName = "HashLab.app"
+               BlueprintName = "HashLab"
+               ReferencedContainer = "container:HashLab.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -45,9 +45,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2710D43C2F7970BD005028D3"
-            BuildableName = "SwiftUISample.app"
-            BlueprintName = "SwiftUISample"
-            ReferencedContainer = "container:SwiftUISample.xcodeproj">
+            BuildableName = "HashLab.app"
+            BlueprintName = "HashLab"
+            ReferencedContainer = "container:HashLab.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <EnvironmentVariables>
@@ -69,9 +69,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2710D43C2F7970BD005028D3"
-            BuildableName = "SwiftUISample.app"
-            BlueprintName = "SwiftUISample"
-            ReferencedContainer = "container:SwiftUISample.xcodeproj">
+            BuildableName = "HashLab.app"
+            BlueprintName = "HashLab"
+            ReferencedContainer = "container:HashLab.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
