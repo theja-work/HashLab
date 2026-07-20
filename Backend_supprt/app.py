@@ -23,7 +23,7 @@ def fetch_user(username):
 
     cursor.execute(
         """
-        SELECT id, username, password_hash
+        SELECT id, username, password_hash, is_admin
         FROM users
         WHERE username = ?
         """,
@@ -36,6 +36,25 @@ def fetch_user(username):
 
     return result
     
+def count_admin_users():
+
+    conn = sqlite3.connect("users.db")
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT COUNT(*)
+        FROM users
+        WHERE is_admin = 1
+        """
+    )
+
+    count = cursor.fetchone()[0]
+
+    conn.close()
+
+    return count
+    
 def user_exists(username):
 
     user = fetch_user(username)
@@ -45,7 +64,7 @@ def user_exists(username):
 
     return False, None
 
-def create_user(username, password):
+def create_user(username, password , is_admin=0):
 
     password_hash = generate_hash(password)
 
@@ -55,12 +74,13 @@ def create_user(username, password):
 
     cursor.execute(
         """
-        INSERT INTO users(username, password_hash)
-        VALUES(?, ?)
+        INSERT INTO users(username, password_hash , is_admin)
+        VALUES(?, ?, ?)
         """,
         (
             username,
-            password_hash
+            password_hash,
+            int(is_admin)
         )
     )
 
@@ -99,27 +119,39 @@ def login():
             "message": error
         }, 401
     
+    user = fetch_user(username)
+
+    print("debug_mode_login : user :", user)
+    
     return {
         "success": True,
-        "token": "local-token-123"
-    }
+        "token": "local-token-123",
+        "isAdmin": bool(user[3])
+    }, 200
     
     
 @app.route("/signup", methods=["POST"])
 def signup():
 
     data = request.get_json()
+    
+    print("debug_mode : Received JSON:", data)
 
     username = data.get("username")
     password = data.get("password")
+    is_admin = bool(data.get("isAdmin", False))
     
-    if not username or not password:
+    print(f"debug_mode : Username: {username}")
+    print(f"debug_mode : Password: {password}")
+    print(f"debug_mode : is_admin: {is_admin}")
+    print(f"debug_mode : is_admin type: {type(is_admin)}")
 
+    if not username or not password:
         return {
             "success": False,
             "message": "Missing fields"
         }, 400
-    
+
     exists, error = user_exists(username)
 
     if exists:
@@ -127,13 +159,27 @@ def signup():
             "success": False,
             "message": error
         }, 409
-    
-    create_user(username, password)
 
+    if is_admin:
+        admin_count = count_admin_users()
+
+        if admin_count >= 2:
+            return {
+                "success": False,
+                "message": "Maximum number of admin accounts reached."
+            }, 409
+
+    create_user(username, password, is_admin)
+    
+    user = fetch_user(username)
+
+    print("debug_mode : user :", user)
+    
     return {
         "success": True,
-        "message": "User created"
-    }
+        "message": "Signup successful",
+        "isAdmin": bool(user[3])
+    }, 201
     
 def delete_user(username):
 
@@ -158,6 +204,8 @@ def delete_user(username):
         return False, "Unable to delete user"
 
     return True, None
+    
+    
     
 @app.route("/deleteAccount", methods=["DELETE"])
 def delete_account():
@@ -203,4 +251,4 @@ def delete_account():
     }, 500
     
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)

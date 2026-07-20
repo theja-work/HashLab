@@ -17,6 +17,7 @@ class SignUpViewModel : ObservableObject {
     @Published var password : String = ""
     @Published var isSignedUp : Bool = false
     @Published var confirmPassword: String = ""
+    @Published var isAdmin : Bool = false 
     
     private let authService : AuthServiceProtocol
     
@@ -44,7 +45,7 @@ class SignUpViewModel : ObservableObject {
         
         do {
             
-            let token = try await authService.signup(username, password)
+            let token = try await authService.signup(username, password , isAdmin)
             print("Signup succeeded : \(token)")
             
             isSignedUp = true

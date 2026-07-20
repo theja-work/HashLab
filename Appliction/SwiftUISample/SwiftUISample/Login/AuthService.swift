@@ -10,11 +10,15 @@ import Foundation
 struct AuthRequest : Encodable {
     var username : String
     var password : String
+    var isAdmin : Bool
 }
 
 struct AuthResponse : Decodable {
+    
     let success: Bool
     let token: String
+    let isAdmin: Bool
+    
 }
 
 struct AuthErrorResponse : Decodable {
@@ -25,18 +29,20 @@ struct AuthErrorResponse : Decodable {
 struct SignupResponse: Decodable {
     let success: Bool
     let message: String
+    let isAdmin: Bool
+    
 }
 
 protocol AuthServiceProtocol : AnyObject {
     func login(_ email : String , _ password : String) async throws -> AuthResponse
     
-    func signup(_ email : String , _ password : String) async throws -> SignupResponse
+    func signup(_ email : String , _ password : String , _ isAdmin : Bool) async throws -> SignupResponse
 }
 
 extension AuthServiceProtocol {
     
-    func signup(_ email : String , _ password : String) async throws -> SignupResponse {
-        return SignupResponse(success: true, message: "")
+    func signup(_ email : String , _ password : String , _ isAdmin: Bool) async throws -> SignupResponse {
+        return SignupResponse(success: true, message: "", isAdmin: isAdmin)
     }
 }
 
@@ -44,25 +50,22 @@ final class AuthService : AuthServiceProtocol {
     
     func login(_ email: String, _ password: String) async throws -> AuthResponse {
         
-        guard let url = URL(string: "http://127.0.0.1:5000/login") else {
-            throw URLError(.badURL)
-        }
+        let api = Service()
         
-        var request = URLRequest(url: url)
-        let body = AuthRequest(username: email, password: password)
-        request.httpMethod = "POST"
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        api.apiType = .login
+        api.environment = .Development
+        api.methodType = .POST
+        let body = AuthRequest(username: email, password: password, isAdmin: false)
+        api.body = try JSONEncoder().encode(body)
         
-        request.httpBody = try JSONEncoder().encode(body)
-        
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await api.getData()
         
         guard let response = response as? HTTPURLResponse else {
             throw URLError(.badServerResponse)
         }
         
         switch response.statusCode {
-        case 200 :
+        case 200...299 :
             let token = try JSONDecoder().decode(AuthResponse.self , from: data)
             return token
         case 400 :
@@ -90,30 +93,27 @@ final class AuthService : AuthServiceProtocol {
 final class SignUpService : AuthServiceProtocol {
     
     func login(_ email: String, _ password: String) async throws -> AuthResponse {
-        return AuthResponse(success: false, token: "")
+        return AuthResponse(success: false, token: "", isAdmin: false)
     }
     
-    func signup(_ email: String, _ password: String) async throws -> SignupResponse {
+    func signup(_ email: String, _ password: String , _ isAdmin : Bool = false) async throws -> SignupResponse {
         
-        guard let url = URL(string: "http://127.0.0.1:5000/signup") else {
-            throw URLError(.badURL)
-        }
+        let api = Service()
         
-        var request = URLRequest(url: url)
-        let body = AuthRequest(username: email, password: password)
-        request.httpMethod = "POST"
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        api.apiType = .signup
+        api.environment = .Development
+        api.methodType = .POST
+        let body = AuthRequest(username: email, password: password, isAdmin: isAdmin)
+        api.body = try JSONEncoder().encode(body)
         
-        request.httpBody = try JSONEncoder().encode(body)
+        let (data, response) = try await api.getData()
         
-        let (data, response) = try await URLSession.shared.data(for: request)
-        
-        guard let response = response as? HTTPURLResponse else {
+        guard let httpResponse = response as? HTTPURLResponse else {
             throw URLError(.badServerResponse)
         }
         
-        switch response.statusCode {
-        case 200 :
+        switch httpResponse.statusCode {
+        case 200...299 :
             let resp = try JSONDecoder().decode(SignupResponse.self , from: data)
             return resp
         case 400 :
@@ -121,12 +121,15 @@ final class SignUpService : AuthServiceProtocol {
                 NSLocalizedDescriptionKey: "Invalid signup data"
             ])
         case 409:
+            
+            let resp = try JSONDecoder().decode(SignupResponse.self , from: data)
+            
             throw NSError(
                 domain: "",
                 code: 409,
                 userInfo: [
                     NSLocalizedDescriptionKey:
-                    "User already exists"
+                        resp.message
                 ]
             )
         default :

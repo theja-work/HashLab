@@ -7,33 +7,36 @@
 
 import SwiftUI
 
-struct HomeView : View {
-    
+struct HomeView: View {
+
     @State private var navigateToDeleteAccount = false
-    
+
     var body: some View {
-        
-        NavigationStack {
-            VStack {
-                Text("Welcome Home 🚀")
-                    .font(.largeTitle)
-                    .bold()
-                    .padding(EdgeInsets(top: 50, leading: 10, bottom: 10, trailing: 10))
 
-                Spacer()
+        VStack {
 
-                Button {
-                    Logger.log("execute delete account")
-                    navigateToDeleteAccount = true
-                } label: {
-                    Text("Delete Account")
-                        .bold()
-                }
-                .buttonStyle(.borderedProminent)
+            Text("Welcome Home 🚀")
+                .font(.largeTitle)
+                .bold()
+                .padding(.top, 50)
+
+            Spacer()
+            
+            Button("Sample button") {
+                print("Sample button functionality")
             }
-            .navigationDestination(isPresented: $navigateToDeleteAccount) {
-                DeleteAccountView()
+            .padding(EdgeInsets(top: 0, leading: 0, bottom: 100, trailing: 0))
+            .buttonStyle(.borderless)
+
+            Button("Delete Account") {
+                navigateToDeleteAccount = true
             }
+            .buttonStyle(.borderedProminent)
+            .padding(EdgeInsets(top: 0, leading: 0, bottom: 100, trailing: 0))
+
+        }
+        .navigationDestination(isPresented: $navigateToDeleteAccount) {
+            DeleteAccountView()
         }
     }
 }

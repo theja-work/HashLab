@@ -9,6 +9,8 @@ import SwiftUI
 
 struct ContentView : View {
     
+    @FocusState var focusedField: Field?
+    
     @StateObject private var viewModel = LoginViewModel(dependency: AuthService())
     
     var body : some View {
@@ -26,12 +28,14 @@ struct ContentView : View {
                     .keyboardType(.emailAddress)
                     .textFieldStyle(.roundedBorder)
                     .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
+                    .focused($focusedField, equals: .username)
                 
                 SecureField("Password", text: $viewModel.password)
                     .autocapitalization(.none)
                     .keyboardType(.emailAddress)
                     .textFieldStyle(.roundedBorder)
                     .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
+                    .focused($focusedField, equals: .password)
                 
                 if let errorMessage = viewModel.errorMessage {
                     
@@ -81,6 +85,11 @@ struct ContentView : View {
                         .underline(true)
                         .foregroundStyle(Color(.systemBlue))
                 }
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .contentShape(Rectangle())
+            .onTapGesture {
+                focusedField = nil
             }
             
             .navigationDestination(isPresented: $viewModel.isLoggedIn) {

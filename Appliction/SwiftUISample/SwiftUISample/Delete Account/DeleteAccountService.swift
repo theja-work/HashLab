@@ -15,24 +15,21 @@ final class DeleteAccountService : DeleteAccountServiceProtocol {
     
     func deleteAccount(_ username: String, _ password: String) async throws -> DeleteAccountModel {
         
-        guard let url = URL(string: "http://127.0.0.1:5000/deleteAccount") else {
-            throw URLError(.badURL)
-        }
+        let api = Service()
+        api.apiType = .deleteAccount
+        api.environment = .Development
+        api.methodType = .DELETE
+        let body = AuthRequest(username: username, password: password, isAdmin: false)
+        api.body = try JSONEncoder().encode(body)
         
-        var request = URLRequest(url: url)
-        let body = AuthRequest(username: username, password: password)
-        request.httpMethod = "DELETE"
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        request.httpBody = try JSONEncoder().encode(body)
-        
-        let (data , response) = try await URLSession.shared.data(for: request)
+        let (data , response) = try await api.getData()
         
         guard let response = response as? HTTPURLResponse else {
             throw URLError(.badServerResponse)
         }
         
         switch response.statusCode {
+            
         case 200 :
             let token = try JSONDecoder().decode(DeleteAccountModel.self , from: data)
             return token
