@@ -1,6 +1,6 @@
 //
-//  SwiftUISampleApp.swift
-//  SwiftUISample
+//  HashLab.swift
+//  HashLab
 //
 //  Created by Thejas Kasaba on 29/03/26.
 //
@@ -8,10 +8,10 @@
 import SwiftUI
 
 @main
-struct SwiftUISampleApp: App {
+struct HashLab: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            LoginView()
         }
     }
 }

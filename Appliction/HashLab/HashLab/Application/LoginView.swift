@@ -1,17 +1,17 @@
 //
-//  ContentView.swift
-//  SwiftUISample
+//  LoginView.swift
+//  LoginView
 //
 //  Created by Thejas Kasaba on 29/03/26.
 //
 
 import SwiftUI
 
-struct ContentView : View {
+struct LoginView : View {
     
     @FocusState var focusedField: Field?
     
-    @StateObject private var viewModel = LoginViewModel(dependency: AuthService())
+    @StateObject private var viewModel = LoginViewModel(dependency: LoginService())
     
     var body : some View {
         
@@ -102,5 +102,5 @@ struct ContentView : View {
 }
 
 #Preview {
-    ContentView()
+    LoginView()
 }

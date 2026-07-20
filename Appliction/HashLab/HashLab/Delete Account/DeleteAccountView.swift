@@ -132,7 +132,7 @@ struct DeleteAccountView: View {
         }
         
         .navigationDestination(isPresented: $navigateToLogin) {
-            ContentView()
+            LoginView()
         }
         
     }

@@ -1,0 +1,49 @@
+//
+//  Networking.swift
+//  HashLab
+//
+//  Created by Thejas Kasaba on 20/07/26.
+//
+
+import Foundation
+
+enum Endpoint {
+
+    case login
+    case signup
+    case deleteAccount
+
+    var path: String {
+
+        switch self {
+
+        case .login:
+            return "login"
+
+        case .signup:
+            return "signup"
+
+        case .deleteAccount:
+            return "deleteAccount"
+        }
+    }
+
+    var url: URL {
+        
+        URL(string: APIConfig.baseURL + path) ?? URL(string : "")!
+    }
+    
+    var requiresToken: Bool {
+
+        switch self {
+
+        case .login:
+            return false
+
+        case .deleteAccount:
+            return true
+            
+        default : return false
+        }
+    }
+}
