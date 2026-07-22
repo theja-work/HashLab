@@ -24,7 +24,9 @@ struct HomeView: View {
             
             Button("Logout") {
                 
-                session.logout()
+                Task {
+                    await session.logout()
+                }
             }
             .padding(EdgeInsets(top: 0, leading: 0, bottom: 100, trailing: 0))
             .buttonStyle(.borderless)

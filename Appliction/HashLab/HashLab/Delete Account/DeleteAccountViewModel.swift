@@ -14,7 +14,6 @@ class DeleteAccountViewModel : ObservableObject {
     @Published var isDeleted : Bool = false
     @Published var isLoading : Bool = false
     @Published var errorMessage : String? = nil
-    @Published var username : String = ""
     @Published var password : String = ""
     @Published var confirmPassword : String = ""
     @Published var deletedUsersCount : Int = 0
@@ -27,7 +26,7 @@ class DeleteAccountViewModel : ObservableObject {
         deleteService = dependency
     }
     
-    func deleteAccount() async {
+    func deleteAccount(_ username : String) async {
         
         guard isValid else {
             errorMessage = "Invalid credentials"
@@ -39,6 +38,8 @@ class DeleteAccountViewModel : ObservableObject {
         isDeleted = false
         
         do {
+            
+            
             
             let token = try await deleteService.deleteAccount(username, password)
             Logger.log(token.message)
@@ -54,7 +55,7 @@ class DeleteAccountViewModel : ObservableObject {
         
     }
     
-    func deleteUsers() async {
+    func deleteUsers(_ username : String) async {
         
         guard isValid else {
             errorMessage = "Invalid Credentials"

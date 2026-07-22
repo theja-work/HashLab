@@ -14,13 +14,23 @@ final class SessionManager : ObservableObject {
         user != nil
     }
     
+    var username: String? {
+        user?.username
+    }
+    
     @Published private(set) var user : UserSession?
     
     func login(as user: UserSession) {
         self.user = user
     }
     
-    func logout() {
-        user = nil 
+    @MainActor
+    func logout() async {
+        user = nil
+    }
+    
+    @MainActor
+    func accountDeleted() async {
+        user = nil
     }
 }

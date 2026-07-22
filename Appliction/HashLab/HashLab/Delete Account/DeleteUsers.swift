@@ -16,6 +16,8 @@ struct DeleteUsers: View {
     @State var showDeleteAlert : Bool = false
     @State var showSuccessToast : Bool = false
     
+    @EnvironmentObject private var session : SessionManager
+    
     @Environment(\.dismiss)
     private var dismiss
     
@@ -29,11 +31,12 @@ struct DeleteUsers: View {
                 Text("Delete Users")
                     .font(.largeTitle)
                     .bold()
+                    .padding(.bottom, 32)
                 
-                TextField("Email", text: $viewModel.username)
-                    .focused($focusedField, equals: .username)
-                    .padding(EdgeInsets(top: 6, leading: 12, bottom: 6, trailing: 12))
-                    .textFieldStyle(.roundedBorder)
+                Text("Logged in as")
+                
+                Text("\(session.username ?? "")")
+                    .fontWeight(.semibold)
                 
                 PasswordField(title: "Password", text: $viewModel.password)
                     .focused($focusedField, equals: .password)
@@ -70,9 +73,6 @@ struct DeleteUsers: View {
                 .buttonStyle(.borderedProminent)
                 .foregroundStyle(.red)
                 
-                .onChange(of: viewModel.username) { oldValue, newValue in
-                    viewModel.errorMessage = nil
-                }
                 .onChange(of: viewModel.password) { oldValue, newValue in
                     viewModel.errorMessage = nil
                 }
@@ -108,7 +108,10 @@ struct DeleteUsers: View {
             
             Button("OK", role: .destructive) {
                 Task {
-                    await viewModel.deleteUsers()
+                    
+                    guard let username = session.username else {return}
+                    
+                    await viewModel.deleteUsers(username)
                     
                     if viewModel.isDeleted {
                         showSuccessToast = true

@@ -35,13 +35,12 @@ struct DeleteAccountView: View {
                 Text("Delete Account")
                     .font(.largeTitle)
                     .bold()
+                    .padding(.bottom, 32)
                 
-                TextField("Username", text: $viewModel.username)
-                    .autocapitalization(.none)
-                    .keyboardType(.emailAddress)
-                    .textFieldStyle(.roundedBorder)
-                    .padding(EdgeInsets(top: 50, leading: 20, bottom: 0, trailing: 20))
-                    .focused($focusedField, equals: .username)
+                Text("Logged in as")
+                
+                Text("\(session.username ?? "")")
+                    .fontWeight(.semibold)
                 
                 PasswordField(title: "Password", text: $viewModel.password)
                     .keyboardType(.emailAddress)
@@ -73,14 +72,11 @@ struct DeleteAccountView: View {
                 .buttonStyle(.borderedProminent)
                 .disabled((viewModel.isLoading || !viewModel.isValid))
                 
-                .onChange(of: viewModel.username) { oldValue, newValue in
-                    viewModel.errorMessage = nil
-                }
                 
                 .onChange(of: viewModel.password) { oldValue, newValue in
                     viewModel.errorMessage = nil
                 }
-                .padding(EdgeInsets(top: 100, leading: 10, bottom: 10, trailing: 10))
+                .padding(EdgeInsets(top: 32, leading: 10, bottom: 10, trailing: 10))
                 .foregroundStyle(.red)
                 
             }
@@ -116,14 +112,19 @@ struct DeleteAccountView: View {
             
             Button("OK", role: .destructive) {
                 Task {
-                    await viewModel.deleteAccount()
+                    
+                    guard let username = session.username else {return}
+                    
+                    await viewModel.deleteAccount(username)
                     
                     if viewModel.isDeleted {
                         showSuccessToast = true
                         try? await Task.sleep(nanoseconds: 1_600_000_000)
                         showSuccessToast = false
                         
-                        session.logout()
+                        Task {
+                            await session.accountDeleted()
+                        }
                     }
                 }
             }
