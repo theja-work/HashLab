@@ -10,6 +10,7 @@ import SwiftUI
 struct HomeView: View {
 
     @State private var navigateToDeleteAccount = false
+    @State private var navigateToDeleteUsers = false
 
     var body: some View {
 
@@ -32,11 +33,21 @@ struct HomeView: View {
                 navigateToDeleteAccount = true
             }
             .buttonStyle(.borderedProminent)
+            .padding(EdgeInsets(top: 0, leading: 0, bottom: 50, trailing: 0))
+            
+            Button("Delete Users") {
+                navigateToDeleteUsers = true
+            }
+            .buttonStyle(.borderedProminent)
             .padding(EdgeInsets(top: 0, leading: 0, bottom: 100, trailing: 0))
 
         }
         .navigationDestination(isPresented: $navigateToDeleteAccount) {
             DeleteAccountView()
+        }
+        
+        .navigationDestination(isPresented: $navigateToDeleteUsers) {
+            DeleteUsers()
         }
     }
 }

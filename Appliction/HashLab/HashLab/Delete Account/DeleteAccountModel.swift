@@ -11,3 +11,16 @@ struct DeleteAccountModel : Codable {
     let success : Bool
     let message : String
 }
+
+struct DeleteUsersModel : Codable {
+    
+    let success : Bool
+    let message : String
+    let deletedUserCount : Int
+    
+    enum CodingKeys: String , CodingKey {
+        case success
+        case message
+        case deletedUserCount = "deleted_count"
+    }
+}

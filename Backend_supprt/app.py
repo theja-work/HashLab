@@ -55,6 +55,25 @@ def count_admin_users():
 
     return count
     
+def count_non_admin_users():
+
+    conn = sqlite3.connect("users.db")
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT COUNT(*)
+        FROM users
+        WHERE is_admin = 0
+        """
+    )
+
+    count = cursor.fetchone()[0]
+
+    conn.close()
+
+    return count
+    
 def user_exists(username):
 
     user = fetch_user(username)
@@ -121,8 +140,6 @@ def login():
     
     user = fetch_user(username)
 
-    print("debug_mode_login : user :", user)
-    
     return {
         "success": True,
         "token": "local-token-123",
@@ -135,16 +152,10 @@ def signup():
 
     data = request.get_json()
     
-    print("debug_mode : Received JSON:", data)
-
     username = data.get("username")
     password = data.get("password")
     is_admin = bool(data.get("isAdmin", False))
     
-    print(f"debug_mode : Username: {username}")
-    print(f"debug_mode : Password: {password}")
-    print(f"debug_mode : is_admin: {is_admin}")
-    print(f"debug_mode : is_admin type: {type(is_admin)}")
 
     if not username or not password:
         return {
@@ -173,8 +184,6 @@ def signup():
     
     user = fetch_user(username)
 
-    print("debug_mode : user :", user)
-    
     return {
         "success": True,
         "message": "Signup successful",
@@ -204,9 +213,8 @@ def delete_user(username):
         return False, "Unable to delete user"
 
     return True, None
-    
-    
-    
+
+
 @app.route("/deleteAccount", methods=["DELETE"])
 def delete_account():
 
@@ -249,6 +257,84 @@ def delete_account():
         "success": False,
         "message": "Account deletion could not be confirmed"
     }, 500
+
+def delete_all_non_admin_users():
+
+    conn = sqlite3.connect("users.db")
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        DELETE FROM users
+        WHERE is_admin = 0
+    """)
+
+    conn.commit()
+
+    deleted_count = cursor.rowcount
+
+    conn.close()
+
+    if deleted_count == 0:
+        return False, "There are no non-admin users.", 0
+
+    return True, "Non-admin users deleted successfully.", deleted_count
+    
+@app.route("/deleteUsers", methods=["DELETE"])
+def delete_users():
+
+    data = request.get_json()
+    
+    username = data.get("username")
+    password = data.get("password")
+
+    if not username or not password:
+        return {
+            "success": False,
+            "message": "Username and password are required",
+            "deleted_count" : 0
+        }, 400
+        
+    is_valid, error = verify_credentials_helper(username, password)
+
+    if not is_valid:
+        return {
+            "success": False,
+            "message": error,
+            "deleted_count": 0
+        }, 401
+
+    user = fetch_user(username)
+    
+    if user is None:
+        
+        return {
+            "success": False,
+            "message": "User does not exist",
+            "deleted_count" : 0
+        }, 404
+
+    if user[3] == 0:
+
+        return {
+            "success": False,
+            "message": "Only admins can perform this action.",
+            "deleted_count" : 0
+        }, 403
+        
+    success, message, deleted_count = delete_all_non_admin_users()
+
+    if not success:
+        return {
+            "success": False,
+            "message": message,
+            "deleted_count": deleted_count
+        }, 400
+
+    return {
+        "success": True,
+        "message": message,
+        "deleted_count": deleted_count
+    }, 200
     
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
