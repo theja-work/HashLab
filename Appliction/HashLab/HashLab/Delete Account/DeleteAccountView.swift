@@ -24,6 +24,8 @@ struct DeleteAccountView: View {
     
     @State private var navigateToLogin = false
     
+    @EnvironmentObject private var session : SessionManager
+    
     var body: some View {
         
         ZStack {
@@ -123,16 +125,12 @@ struct DeleteAccountView: View {
                         try? await Task.sleep(nanoseconds: 1_600_000_000)
                         showSuccessToast = false
                         
-                        navigateToLogin = true
+                        session.logout()
                     }
                 }
             }
         } message: {
             Text("Are you sure you want to delete your account? This action cannot be undone.")
-        }
-        
-        .navigationDestination(isPresented: $navigateToLogin) {
-            LoginView()
         }
         
     }

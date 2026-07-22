@@ -16,11 +16,11 @@ class LoginViewModel : ObservableObject {
     @Published var username : String = ""
     @Published var password : String = ""
     
-    private let authService : AuthServiceProtocol
+    private let authService : LoginServiceProtocol
     
     var isValid : Bool { password.count >= 6 }
     
-    init(dependency : AuthServiceProtocol) {
+    init(dependency : LoginServiceProtocol) {
         authService = dependency
     }
     

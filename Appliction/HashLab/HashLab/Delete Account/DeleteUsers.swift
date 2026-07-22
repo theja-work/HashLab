@@ -15,118 +15,112 @@ struct DeleteUsers: View {
     
     @State var showDeleteAlert : Bool = false
     @State var showSuccessToast : Bool = false
-    @State var navigateToLogin : Bool = false
+    
+    @Environment(\.dismiss)
+    private var dismiss
     
     var body: some View {
         
-        NavigationStack {
+        
+        ZStack {
             
-            ZStack {
+            VStack(spacing: 16) {
                 
-                VStack(spacing: 16) {
+                Text("Delete Users")
+                    .font(.largeTitle)
+                    .bold()
+                
+                Form {
                     
-                    Text("Delete Users")
-                        .font(.largeTitle)
-                        .bold()
+                    TextField("Email", text: $viewModel.username)
+                        .focused($focusedField, equals: .username)
                     
-                    Form {
-                        
-                        TextField("Email", text: $viewModel.username)
-                            .focused($focusedField, equals: .username)
-                        
-                        SecureField("Password", text: $viewModel.password)
-                            .focused($focusedField, equals: .password)
-                        
-                        SecureField("Confirm Password", text: $viewModel.confirmPassword)
-                            .focused($focusedField, equals: .confirmPassword)
-                        
-                    }
+                    SecureField("Password", text: $viewModel.password)
+                        .focused($focusedField, equals: .password)
                     
-                    if let errorMessage = viewModel.errorMessage {
-                        
-                        Text(errorMessage)
-                            .onAppear(perform: {
-                                print("Login failed : \(errorMessage)")
-                            })
-                            .foregroundStyle(.red)
-                            .font(.caption)
-                    }
+                    SecureField("Confirm Password", text: $viewModel.confirmPassword)
+                        .focused($focusedField, equals: .confirmPassword)
                     
-                    Button {
-                        showDeleteAlert = true
-                    } label: {
-                        
-                        if viewModel.isLoading {
-                            ProgressView()
-                        }
-                        else {
-                            Text("Delete")
-                                .bold()
-                        }
-                    }
-                    .disabled(viewModel.isLoading || !viewModel.isValid)
-                    .padding(EdgeInsets(top: 0, leading: 0, bottom: 100, trailing: 0))
-                    .buttonStyle(.borderedProminent)
-                    .foregroundStyle(.red)
-                    
-                    .onChange(of: viewModel.username) { oldValue, newValue in
-                        viewModel.errorMessage = nil
-                    }
-                    .onChange(of: viewModel.password) { oldValue, newValue in
-                        viewModel.errorMessage = nil
-                    }
-                }
-                .blur(radius: showSuccessToast ? 6 : 0)
-                .disabled(showSuccessToast)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .contentShape(Rectangle())
-                .onTapGesture {
-                    //print("VStack tapped")
-                    focusedField = nil
                 }
                 
-                if showSuccessToast {
+                if let errorMessage = viewModel.errorMessage {
                     
-                    Color.black.opacity(0.18)
-                                .ignoresSafeArea()
-                    
-                    Text("Users deleted successfully. Total users deleted : \(viewModel.deletedUsersCount)")
-                        .padding(.horizontal, 18)
-                        .padding(.vertical, 12)
-                        .background(.ultraThinMaterial)
-                        .clipShape(Capsule())
-                        .padding(.bottom, 40)
-                        .shadow(radius: 8)
-                        .transition(.scale.combined(with: .opacity))
+                    Text(errorMessage)
+                        .onAppear(perform: {
+                            Logger.log(errorMessage)
+                        })
+                        .foregroundStyle(.red)
+                        .font(.caption)
                 }
                 
+                Button {
+                    showDeleteAlert = true
+                } label: {
+                    
+                    if viewModel.isLoading {
+                        ProgressView()
+                    }
+                    else {
+                        Text("Delete")
+                            .bold()
+                    }
+                }
+                .disabled(viewModel.isLoading || !viewModel.isValid)
+                .padding(EdgeInsets(top: 0, leading: 0, bottom: 100, trailing: 0))
+                .buttonStyle(.borderedProminent)
+                .foregroundStyle(.red)
+                
+                .onChange(of: viewModel.username) { oldValue, newValue in
+                    viewModel.errorMessage = nil
+                }
+                .onChange(of: viewModel.password) { oldValue, newValue in
+                    viewModel.errorMessage = nil
+                }
             }
-            .animation(.easeInOut(duration: 0.25), value: showSuccessToast)
-            
-            .alert("Delete Users", isPresented: $showDeleteAlert) {
-                Button("Cancel", role: .cancel) { }
-                
-                Button("OK", role: .destructive) {
-                    Task {
-                        await viewModel.deleteUsers()
-                        
-                        if viewModel.isDeleted {
-                            showSuccessToast = true
-                            try? await Task.sleep(nanoseconds: 1_600_000_000)
-                            showSuccessToast = false
-                            
-                            navigateToLogin = true
-                        }
-                    }
-                }
-            } message: {
-                Text("Are you sure you want to delete all the users? This action cannot be undone.")
+            .blur(radius: showSuccessToast ? 6 : 0)
+            .disabled(showSuccessToast)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .contentShape(Rectangle())
+            .onTapGesture {
+                focusedField = nil
             }
             
-            .navigationDestination(isPresented: $navigateToLogin) {
-                LoginView()
+            if showSuccessToast {
+                
+                Color.black.opacity(0.18)
+                    .ignoresSafeArea()
+                
+                Text("Users deleted successfully.\n Total users deleted : \(viewModel.deletedUsersCount)")
+                    .padding(.horizontal, 18)
+                    .padding(.vertical, 12)
+                    .background(.ultraThinMaterial)
+                    .clipShape(Capsule())
+                    .padding(.bottom, 40)
+                    .shadow(radius: 8)
+                    .transition(.scale.combined(with: .opacity))
             }
             
+        }
+        .animation(.easeInOut(duration: 0.25), value: showSuccessToast)
+        
+        .alert("Delete Users", isPresented: $showDeleteAlert) {
+            Button("Cancel", role: .cancel) { }
+            
+            Button("OK", role: .destructive) {
+                Task {
+                    await viewModel.deleteUsers()
+                    
+                    if viewModel.isDeleted {
+                        showSuccessToast = true
+                        try? await Task.sleep(nanoseconds: 1_600_000_000)
+                        showSuccessToast = false
+                        
+                        dismiss()
+                    }
+                }
+            }
+        } message: {
+            Text("Are you sure you want to delete all the users? This action cannot be undone.")
         }
         
     }

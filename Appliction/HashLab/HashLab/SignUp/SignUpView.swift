@@ -16,6 +16,8 @@ public struct SignUpView: View {
     
     @FocusState var focusedField: Field?
     
+    @EnvironmentObject private var session: SessionManager
+    
     public var body: some View {
         
         NavigationStack {
@@ -81,7 +83,10 @@ public struct SignUpView: View {
                 Button {
                     
                     Task {
-                        await viewModel.signUp()
+                        
+                        guard let response = await viewModel.signUp() else { return }
+                        
+                        session.login(as: UserSession(username: response.username , isAdmin: response.isAdmin))
                     }
                     
                 } label: {
@@ -108,9 +113,6 @@ public struct SignUpView: View {
             
         }
         .navigationTitle("Sign Up")
-        .navigationDestination(isPresented: $viewModel.isSignedUp) {
-            HomeView()
-        }
         
         .alert(
             "Admin Privileges",

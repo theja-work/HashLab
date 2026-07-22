@@ -7,11 +7,16 @@
 
 import Foundation
 
-final class SignUpService : AuthServiceProtocol {
+protocol SignupServiceProtocol : AnyObject {
     
-    func login(_ email: String, _ password: String) async throws -> AuthResponse {
-        return AuthResponse(success: false, username: "", token: "", isAdmin: false)
-    }
+    var loginService: LoginService { get set }
+    
+    func signup(_ email : String , _ password : String , _ isAdmin: Bool) async throws -> SignupResponse
+}
+
+final class SignUpService : SignupServiceProtocol {
+    
+    internal var loginService: LoginService = LoginService()
     
     func signup(_ email: String, _ password: String , _ isAdmin : Bool = false) async throws -> SignupResponse {
         

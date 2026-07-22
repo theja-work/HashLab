@@ -15,11 +15,10 @@ class SignUpViewModel : ObservableObject {
     @Published var errorMessage : String? = nil
     @Published var username : String = ""
     @Published var password : String = ""
-    @Published var isSignedUp : Bool = false
     @Published var confirmPassword: String = ""
     @Published var isAdmin : Bool = false 
     
-    private let authService : AuthServiceProtocol
+    private let authService : SignupServiceProtocol
     
     var isValid: Bool {
 
@@ -28,34 +27,40 @@ class SignUpViewModel : ObservableObject {
         password == confirmPassword
     }
     
-    init(dependency : AuthServiceProtocol) {
+    init(dependency : SignupServiceProtocol) {
         authService = dependency
     }
     
-    func signUp() async {
+    func signUp() async -> AuthResponse? {
         
         guard isValid else {
             errorMessage = "Invalid credentials"
-            return
+            return nil
         }
         
         errorMessage = nil
         isLoading = true
-        isSignedUp = false
+        
+        defer {
+            isLoading = false
+        }
         
         do {
             
-            let token = try await authService.signup(username, password , isAdmin)
-            print("Signup succeeded : \(token)")
+            let signupResponse = try await authService.signup(username, password , isAdmin)
             
-            isSignedUp = true
+            guard signupResponse.success else { return nil }
+            
+            let response = try await authService.loginService.login(username, password)
+            
+            return response
         }
         
         catch {
             errorMessage = error.localizedDescription
+            return nil
         }
         
-        isLoading = false
     }
     
 }

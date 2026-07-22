@@ -43,7 +43,7 @@ class DeleteAccountViewModel : ObservableObject {
             let token = try await deleteService.deleteAccount(username, password)
             Logger.log(token.message)
             
-            isDeleted = true
+            isDeleted = token.success
         }
         
         catch {
@@ -76,6 +76,7 @@ class DeleteAccountViewModel : ObservableObject {
             Logger.log(response.message)
             Logger.log(response.deletedUserCount)
             self.deletedUsersCount = response.deletedUserCount
+            isDeleted = response.success
         }
         
         catch {
