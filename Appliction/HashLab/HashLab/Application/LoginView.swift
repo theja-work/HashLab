@@ -32,10 +32,7 @@ struct LoginView : View {
                     .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
                     .focused($focusedField, equals: .username)
                 
-                SecureField("Password", text: $viewModel.password)
-                    .autocapitalization(.none)
-                    .keyboardType(.emailAddress)
-                    .textFieldStyle(.roundedBorder)
+                PasswordField(title: "Password", text: $viewModel.password)
                     .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
                     .focused($focusedField, equals: .password)
                 

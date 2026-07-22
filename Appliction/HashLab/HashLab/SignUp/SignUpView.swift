@@ -31,17 +31,13 @@ public struct SignUpView: View {
                     .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
                     .focused($focusedField, equals: .username)
                 
-                SecureField("Password", text: $viewModel.password)
-                    .autocapitalization(.none)
+                PasswordField(title: "Password", text: $viewModel.password)
                     .keyboardType(.emailAddress)
-                    .textFieldStyle(.roundedBorder)
                     .padding(EdgeInsets(top: 6, leading: 20, bottom: 0, trailing: 20))
                     .focused($focusedField, equals: .password)
                 
-                SecureField("Confirm Password", text: $viewModel.confirmPassword)
-                    .autocapitalization(.none)
+                PasswordField(title: "Password", text: $viewModel.confirmPassword)
                     .keyboardType(.emailAddress)
-                    .textFieldStyle(.roundedBorder)
                     .padding(EdgeInsets(top: 6, leading: 20, bottom: 0, trailing: 20))
                     .focused($focusedField, equals: .confirmPassword)
                 

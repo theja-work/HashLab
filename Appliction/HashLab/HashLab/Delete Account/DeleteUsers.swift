@@ -30,18 +30,18 @@ struct DeleteUsers: View {
                     .font(.largeTitle)
                     .bold()
                 
-                Form {
-                    
-                    TextField("Email", text: $viewModel.username)
-                        .focused($focusedField, equals: .username)
-                    
-                    SecureField("Password", text: $viewModel.password)
-                        .focused($focusedField, equals: .password)
-                    
-                    SecureField("Confirm Password", text: $viewModel.confirmPassword)
-                        .focused($focusedField, equals: .confirmPassword)
-                    
-                }
+                TextField("Email", text: $viewModel.username)
+                    .focused($focusedField, equals: .username)
+                    .padding(EdgeInsets(top: 6, leading: 12, bottom: 6, trailing: 12))
+                    .textFieldStyle(.roundedBorder)
+                
+                PasswordField(title: "Password", text: $viewModel.password)
+                    .focused($focusedField, equals: .password)
+                    .padding(EdgeInsets(top: 6, leading: 12, bottom: 6, trailing: 12))
+                
+                PasswordField(title: "Confirm Password", text: $viewModel.confirmPassword)
+                    .focused($focusedField, equals: .confirmPassword)
+                    .padding(EdgeInsets(top: 6, leading: 12, bottom: 6, trailing: 12))
                 
                 if let errorMessage = viewModel.errorMessage {
                     
@@ -66,7 +66,7 @@ struct DeleteUsers: View {
                     }
                 }
                 .disabled(viewModel.isLoading || !viewModel.isValid)
-                .padding(EdgeInsets(top: 0, leading: 0, bottom: 100, trailing: 0))
+                .padding(EdgeInsets(top: 6, leading: 0, bottom: 100, trailing: 0))
                 .buttonStyle(.borderedProminent)
                 .foregroundStyle(.red)
                 
