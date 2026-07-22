@@ -9,6 +9,8 @@ import SwiftUI
 
 struct LoginView : View {
     
+    @EnvironmentObject private var session: SessionManager
+    
     @FocusState var focusedField: Field?
     
     @StateObject private var viewModel = LoginViewModel(dependency: LoginService())
@@ -50,7 +52,16 @@ struct LoginView : View {
                 Button {
                     
                     Task {
-                        await viewModel.login()
+                        
+                        if let response = await viewModel.login() {
+                            
+                            session.login(
+                                as: UserSession(
+                                    username: response.username,
+                                    isAdmin: response.isAdmin
+                                )
+                            )
+                        }
                     }
                     
                 } label: {
@@ -92,9 +103,6 @@ struct LoginView : View {
                 focusedField = nil
             }
             
-            .navigationDestination(isPresented: $viewModel.isLoggedIn) {
-                HomeView()
-            }
         }
         
         

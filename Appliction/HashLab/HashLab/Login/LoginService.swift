@@ -42,14 +42,14 @@ final class LoginService : AuthServiceProtocol {
                 NSLocalizedDescriptionKey: "Invalid credentials"
             ])
           
-        case 401 :
+        case 401...499 :
             
             let error = try JSONDecoder().decode(AuthErrorResponse.self , from: data)
             
             Logger.log(error.message)
             print(error.message)
             
-            throw NSError(domain: "", code: 401, userInfo: [
+            throw NSError(domain: "", code: response.statusCode, userInfo: [
                 NSLocalizedDescriptionKey: error.message
             ])
             

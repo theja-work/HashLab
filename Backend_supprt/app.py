@@ -139,10 +139,17 @@ def login():
         }, 401
     
     user = fetch_user(username)
-
+    
+    if user is None:
+        return {
+            "success": False,
+            "message": "User not found"
+        }, 404
+    
     return {
         "success": True,
         "token": "local-token-123",
+        "username" : user[1],
         "isAdmin": bool(user[3])
     }, 200
     

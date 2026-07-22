@@ -15,7 +15,6 @@ class LoginViewModel : ObservableObject {
     @Published var errorMessage : String? = nil
     @Published var username : String = ""
     @Published var password : String = ""
-    @Published var isLoggedIn : Bool = false
     
     private let authService : AuthServiceProtocol
     
@@ -25,30 +24,32 @@ class LoginViewModel : ObservableObject {
         authService = dependency
     }
     
-    func login() async {
+    func login() async -> AuthResponse? {
         
         guard isValid else {
             errorMessage = "Invalid credentials"
-            return
+            return nil
         }
         
         errorMessage = nil
         isLoading = true
-        isLoggedIn = false
+        
+        defer {
+            isLoading = false
+        }
         
         do {
             
-            let token = try await authService.login(username, password)
-            print("Login succeeded : \(token.token)")
+            let response = try await authService.login(username, password)
             
-            isLoggedIn = true
+            return response
         }
         
         catch {
             errorMessage = error.localizedDescription
+            return nil 
         }
         
-        isLoading = false
     }
     
 }

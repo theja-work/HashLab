@@ -11,6 +11,8 @@ struct HomeView: View {
 
     @State private var navigateToDeleteAccount = false
     @State private var navigateToDeleteUsers = false
+    
+    @EnvironmentObject private var session : SessionManager
 
     var body: some View {
 
@@ -23,8 +25,9 @@ struct HomeView: View {
 
             Spacer()
             
-            Button("Sample button") {
-                print("Sample button functionality")
+            Button("Logout") {
+                
+                session.logout()
             }
             .padding(EdgeInsets(top: 0, leading: 0, bottom: 100, trailing: 0))
             .buttonStyle(.borderless)

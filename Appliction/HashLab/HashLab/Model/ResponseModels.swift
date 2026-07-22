@@ -16,6 +16,7 @@ struct AuthRequest : Encodable {
 struct AuthResponse : Decodable {
     
     let success: Bool
+    let username : String
     let token: String
     let isAdmin: Bool
     

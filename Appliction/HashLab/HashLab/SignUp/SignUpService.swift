@@ -10,7 +10,7 @@ import Foundation
 final class SignUpService : AuthServiceProtocol {
     
     func login(_ email: String, _ password: String) async throws -> AuthResponse {
-        return AuthResponse(success: false, token: "", isAdmin: false)
+        return AuthResponse(success: false, username: "", token: "", isAdmin: false)
     }
     
     func signup(_ email: String, _ password: String , _ isAdmin : Bool = false) async throws -> SignupResponse {
