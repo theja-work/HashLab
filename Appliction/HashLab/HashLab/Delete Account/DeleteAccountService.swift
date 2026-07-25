@@ -23,14 +23,7 @@ final class DeleteAccountService : DeleteAccountServiceProtocol {
             print(json)
         }
         
-        var token = ""
-        if !SessionManager.userSessionID.isEmpty {
-            token = SessionManager.userSessionID
-        }
-        
-        Logger.log("delete_users : \(token.isEmpty) : \(token)")
-        
-        let (data, response) = try await NetworkManager.shared.request(endpoint: .deleteUsers, method: .DELETE, body: body, token: token)
+        let (data, response) = try await NetworkManager.shared.request(endpoint: .deleteUsers, method: .DELETE, body: body , requiresAuth: true)
         
         guard let response = response as? HTTPURLResponse else {
             throw URLError(.badServerResponse)
@@ -72,14 +65,7 @@ final class DeleteAccountService : DeleteAccountServiceProtocol {
         let jsonBody = DeleteAccountRequestParams(password: password)
         let body = try JSONEncoder().encode(jsonBody)
         
-        var token = ""
-        if !SessionManager.userSessionID.isEmpty {
-            token = SessionManager.userSessionID
-        }
-        
-        Logger.log("delete_account : \(token.isEmpty) : \(token)")
-        
-        let (data, response) = try await NetworkManager.shared.request(endpoint: .deleteAccount, method: .DELETE, body: body , token: token)
+        let (data, response) = try await NetworkManager.shared.request(endpoint: .deleteAccount, method: .DELETE, body: body , requiresAuth: true)
         
         guard let response = response as? HTTPURLResponse else {
             throw URLError(.badServerResponse)

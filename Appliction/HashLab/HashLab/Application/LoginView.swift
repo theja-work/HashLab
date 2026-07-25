@@ -50,15 +50,14 @@ struct LoginView : View {
                     
                     Task {
                         
-                        SessionManager.userSessionID = ""
-                        
                         if let response = await viewModel.login() {
+                            
+                            try KeychainManager.shared.saveToken(response.token)
                             
                             session.login(
                                 as: UserSession(
                                     username: response.username,
-                                    isAdmin: response.isAdmin,
-                                    token: response.token
+                                    isAdmin: response.isAdmin
                                 )
                             )
                         }

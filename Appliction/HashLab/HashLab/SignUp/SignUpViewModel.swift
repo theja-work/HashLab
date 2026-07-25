@@ -52,8 +52,7 @@ class SignUpViewModel : ObservableObject {
             guard signupResponse.success else { return nil }
             
             let response = try await authService.loginService.login(username, password)
-            Logger.log(response.token)
-            SessionManager.userSessionID = response.token
+            try KeychainManager.shared.saveToken(response.token)
             return response
         }
         

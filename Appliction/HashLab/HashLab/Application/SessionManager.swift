@@ -10,18 +10,12 @@ import Combine
 
 final class SessionManager : ObservableObject {
     
-    static var userSessionID = ""
-    
     var isLoggedIn : Bool {
         user != nil
     }
     
     var username: String? {
         user?.username
-    }
-    
-    var token: String? {
-        user?.token
     }
     
     @Published private(set) var user : UserSession?
@@ -33,10 +27,12 @@ final class SessionManager : ObservableObject {
     @MainActor
     func logout() async {
         user = nil
+        KeychainManager.shared.deleteToken()
     }
     
     @MainActor
     func accountDeleted() async {
         user = nil
+        KeychainManager.shared.deleteToken()
     }
 }
