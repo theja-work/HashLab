@@ -20,7 +20,7 @@ final class SignUpService : SignupServiceProtocol {
     
     func signup(_ email: String, _ password: String , _ isAdmin : Bool = false) async throws -> SignupResponse {
         
-        let jsonBody = AuthRequest(username: email, password: password, isAdmin: isAdmin)
+        let jsonBody = LoginRequestParams(username: email, password: password, isAdmin: isAdmin)
         let body = try JSONEncoder().encode(jsonBody)
         
         let (data, response) = try await NetworkManager.shared.request(endpoint: .signup, method: .POST, body: body)

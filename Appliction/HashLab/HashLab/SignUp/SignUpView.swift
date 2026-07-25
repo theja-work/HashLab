@@ -82,7 +82,7 @@ public struct SignUpView: View {
                         
                         guard let response = await viewModel.signUp() else { return }
                         
-                        session.login(as: UserSession(username: response.username , isAdmin: response.isAdmin))
+                        session.login(as: UserSession(username: response.username , isAdmin: response.isAdmin, token: response.token))
                     }
                     
                 } label: {

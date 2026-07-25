@@ -42,10 +42,6 @@ struct DeleteUsers: View {
                     .focused($focusedField, equals: .password)
                     .padding(EdgeInsets(top: 6, leading: 12, bottom: 6, trailing: 12))
                 
-                PasswordField(title: "Confirm Password", text: $viewModel.confirmPassword)
-                    .focused($focusedField, equals: .confirmPassword)
-                    .padding(EdgeInsets(top: 6, leading: 12, bottom: 6, trailing: 12))
-                
                 if let errorMessage = viewModel.errorMessage {
                     
                     Text(errorMessage)
@@ -109,9 +105,7 @@ struct DeleteUsers: View {
             Button("OK", role: .destructive) {
                 Task {
                     
-                    guard let username = session.username else {return}
-                    
-                    await viewModel.deleteUsers(username)
+                    await viewModel.deleteUsers(viewModel.password)
                     
                     if viewModel.isDeleted {
                         showSuccessToast = true

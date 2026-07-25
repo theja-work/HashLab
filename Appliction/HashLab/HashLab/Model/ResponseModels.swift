@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct AuthRequest : Encodable {
+struct LoginRequestParams : Encodable {
     var username : String
     var password : String
     var isAdmin : Bool

@@ -50,12 +50,15 @@ struct LoginView : View {
                     
                     Task {
                         
+                        SessionManager.userSessionID = ""
+                        
                         if let response = await viewModel.login() {
                             
                             session.login(
                                 as: UserSession(
                                     username: response.username,
-                                    isAdmin: response.isAdmin
+                                    isAdmin: response.isAdmin,
+                                    token: response.token
                                 )
                             )
                         }

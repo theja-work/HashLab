@@ -10,12 +10,18 @@ import Combine
 
 final class SessionManager : ObservableObject {
     
+    static var userSessionID = ""
+    
     var isLoggedIn : Bool {
         user != nil
     }
     
     var username: String? {
         user?.username
+    }
+    
+    var token: String? {
+        user?.token
     }
     
     @Published private(set) var user : UserSession?

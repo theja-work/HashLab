@@ -8,18 +8,29 @@
 import Foundation
 
 protocol DeleteAccountServiceProtocol {
-    func deleteAccount(_ username : String , _ password : String) async throws -> DeleteAccountModel
-    func deleteUsers(_ username : String , _ password : String) async throws -> DeleteUsersModel
+    func deleteAccount(_ password : String) async throws -> DeleteAccountModel
+    func deleteUsers(_ password : String) async throws -> DeleteUsersModel
 }
 
 final class DeleteAccountService : DeleteAccountServiceProtocol {
     
-    func deleteUsers(_ username: String, _ password: String) async throws -> DeleteUsersModel {
+    func deleteUsers(_ password: String) async throws -> DeleteUsersModel {
         
-        let jsonBody = AuthRequest(username: username, password: password, isAdmin: false)
+        let jsonBody = DeleteAccountRequestParams(password: password)
         let body = try JSONEncoder().encode(jsonBody)
         
-        let (data, response) = try await NetworkManager.shared.request(endpoint: .deleteUsers, method: .DELETE, body: body)
+        if let json = String(data: body, encoding: .utf8) {
+            print(json)
+        }
+        
+        var token = ""
+        if !SessionManager.userSessionID.isEmpty {
+            token = SessionManager.userSessionID
+        }
+        
+        Logger.log("delete_users : \(token.isEmpty) : \(token)")
+        
+        let (data, response) = try await NetworkManager.shared.request(endpoint: .deleteUsers, method: .DELETE, body: body, token: token)
         
         guard let response = response as? HTTPURLResponse else {
             throw URLError(.badServerResponse)
@@ -28,8 +39,8 @@ final class DeleteAccountService : DeleteAccountServiceProtocol {
         switch response.statusCode {
             
         case 200 :
-            let token = try JSONDecoder().decode(DeleteUsersModel.self , from: data)
-            return token
+            let response = try JSONDecoder().decode(DeleteUsersModel.self , from: data)
+            return response
         case 400 :
             
             let error = try JSONDecoder().decode(DeleteAccountModel.self , from: data)
@@ -46,7 +57,6 @@ final class DeleteAccountService : DeleteAccountServiceProtocol {
             let error = try JSONDecoder().decode(DeleteUsersModel.self , from: data)
             
             Logger.log(error.message)
-            print(error.message)
             
             throw NSError(domain: "", code: response.statusCode, userInfo: [
                 NSLocalizedDescriptionKey: error.message
@@ -57,12 +67,19 @@ final class DeleteAccountService : DeleteAccountServiceProtocol {
         }
     }
     
-    func deleteAccount(_ username: String, _ password: String) async throws -> DeleteAccountModel {
+    func deleteAccount(_ password: String) async throws -> DeleteAccountModel {
         
-        let jsonBody = AuthRequest(username: username, password: password, isAdmin: false)
+        let jsonBody = DeleteAccountRequestParams(password: password)
         let body = try JSONEncoder().encode(jsonBody)
         
-        let (data, response) = try await NetworkManager.shared.request(endpoint: .deleteAccount, method: .DELETE, body: body)
+        var token = ""
+        if !SessionManager.userSessionID.isEmpty {
+            token = SessionManager.userSessionID
+        }
+        
+        Logger.log("delete_account : \(token.isEmpty) : \(token)")
+        
+        let (data, response) = try await NetworkManager.shared.request(endpoint: .deleteAccount, method: .DELETE, body: body , token: token)
         
         guard let response = response as? HTTPURLResponse else {
             throw URLError(.badServerResponse)
@@ -71,8 +88,8 @@ final class DeleteAccountService : DeleteAccountServiceProtocol {
         switch response.statusCode {
             
         case 200 :
-            let token = try JSONDecoder().decode(DeleteAccountModel.self , from: data)
-            return token
+            let response = try JSONDecoder().decode(DeleteAccountModel.self , from: data)
+            return response
         case 400 :
             throw NSError(domain: "", code: 400, userInfo: [
                 NSLocalizedDescriptionKey: "Invalid credentials"

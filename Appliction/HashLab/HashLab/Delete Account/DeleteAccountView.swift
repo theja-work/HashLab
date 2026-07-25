@@ -113,9 +113,7 @@ struct DeleteAccountView: View {
             Button("OK", role: .destructive) {
                 Task {
                     
-                    guard let username = session.username else {return}
-                    
-                    await viewModel.deleteAccount(username)
+                    await viewModel.deleteAccount(viewModel.password)
                     
                     if viewModel.isDeleted {
                         showSuccessToast = true

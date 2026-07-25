@@ -41,7 +41,8 @@ class LoginViewModel : ObservableObject {
         do {
             
             let response = try await authService.login(username, password)
-            
+            Logger.log(response.token)
+            SessionManager.userSessionID = response.token
             return response
         }
         

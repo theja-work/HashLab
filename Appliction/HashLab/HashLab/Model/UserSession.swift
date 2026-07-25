@@ -10,4 +10,5 @@ import Foundation
 struct UserSession {
     let username: String
     let isAdmin: Bool
+    let token : String
 }

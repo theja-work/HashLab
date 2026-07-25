@@ -16,7 +16,8 @@ final class NetworkManager {
     func request(
         endpoint: Endpoint,
         method: HTTPMethod,
-        body: Data? = nil
+        body: Data? = nil,
+        token : String? = nil
     ) async throws -> (Data, URLResponse) {
         
         guard !endpoint.url.absoluteString.isEmpty else {
@@ -27,6 +28,10 @@ final class NetworkManager {
 
         request.httpMethod = method.rawValue
         request.httpBody = body
+        
+        if let token = token {
+            request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        }
 
         request.setValue(
             "application/json",

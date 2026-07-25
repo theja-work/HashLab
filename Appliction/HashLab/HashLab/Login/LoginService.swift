@@ -16,7 +16,7 @@ final class LoginService : LoginServiceProtocol {
     
     func login(_ email: String, _ password: String) async throws -> AuthResponse {
         
-        let jsonBody = AuthRequest(username: email, password: password, isAdmin: false)
+        let jsonBody = LoginRequestParams(username: email, password: password, isAdmin: false)
         let body = try JSONEncoder().encode(jsonBody)
         
         let (data, response) = try await NetworkManager.shared.request(endpoint: .login, method: .POST, body: body)
