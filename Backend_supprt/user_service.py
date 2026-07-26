@@ -2,8 +2,8 @@
 
 from flask import Blueprint, g
 from flask import request
-from auth_service import verify_credentials_helper
-from auth import token_required
+from credential_service import verify_credentials_helper
+from auth import auth_required
 
 from database import (
     delete_user,
@@ -14,7 +14,7 @@ from database import (
 user_bp = Blueprint("user", __name__)
 
 @user_bp.route("/deleteAccount", methods=["DELETE"])
-@token_required
+@auth_required
 def delete_account():
 
     data = request.get_json() or {}
@@ -24,7 +24,7 @@ def delete_account():
     if not password:
         return {
             "success": False,
-            "message": "Password is required"# this should be incorrect password or we handled that elsewhere?
+            "message": "Password is required"
         }, 400
 
     username = g.user["username"]
@@ -59,7 +59,7 @@ def delete_account():
     }, 500
     
 @user_bp.route("/deleteUsers", methods=["DELETE"])
-@token_required
+@auth_required
 def delete_users():
 
     data = request.get_json() or {}
@@ -69,7 +69,7 @@ def delete_users():
     if not password:
         return {
             "success": False,
-            "message": "Password is required",# this should be incorrect password or we handled that elsewhere?
+            "message": "Password is required",
             "deleted_count": 0
         }, 400
 

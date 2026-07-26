@@ -25,7 +25,7 @@ class DeleteAccountViewModel : ObservableObject {
         deleteService = dependency
     }
     
-    func deleteAccount(_ token : String) async {
+    func deleteAccount(_ username : String? = nil, _ password : String) async {
         
         guard isValid else {
             errorMessage = "Invalid credentials"
@@ -38,10 +38,30 @@ class DeleteAccountViewModel : ObservableObject {
         
         do {
             
-            let token = try await deleteService.deleteAccount(password)
-            Logger.log(token.message)
+            let usernameToSend: String?
+
+            switch AppConfiguration.authenticationMode {
+
+            case .JWT:
+                usernameToSend = nil
+
+            case .Legacy:
+                
+                guard let username = username else {
+                    errorMessage = "Username unavailable"
+                    isLoading = false
+                    return
+                }
+                
+                usernameToSend = username
+            }
+
+            let response = try await deleteService.deleteAccount(
+                usernameToSend,
+                password
+            )
             
-            isDeleted = token.success
+            isDeleted = response.success
         }
         
         catch {
@@ -52,7 +72,7 @@ class DeleteAccountViewModel : ObservableObject {
         
     }
     
-    func deleteUsers(_ password : String) async {
+    func deleteUsers(_ username : String? = nil, _ password : String) async {
         
         guard isValid else {
             errorMessage = "Invalid Credentials"
@@ -64,7 +84,29 @@ class DeleteAccountViewModel : ObservableObject {
         isDeleted = false
         
         do {
-            let response = try await deleteService.deleteUsers(password)
+            
+            let usernameToSend: String?
+
+            switch AppConfiguration.authenticationMode {
+
+            case .JWT:
+                usernameToSend = nil
+
+            case .Legacy:
+                
+                guard let username = username else {
+                    errorMessage = "Username unavailable"
+                    isLoading = false
+                    return
+                }
+                
+                usernameToSend = username
+            }
+            
+            let response = try await deleteService.deleteUsers(
+                usernameToSend,
+                password
+            )
             
             Logger.log(response.message)
             Logger.log(response.deletedUserCount)

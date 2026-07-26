@@ -1,10 +1,14 @@
 
 from flask import request, g
 from functools import wraps
-from database import fetch_user
-from flask import g
+
 import jwt
 import datetime
+
+from database import fetch_user
+from credential_service import verify_credentials_helper
+from config import AUTH_MODE
+from auth_mode import AuthenticationMode
 
 
 JWT_SECRET = "hashlab-secret-key"
@@ -98,4 +102,55 @@ def token_required(func):
 
     return wrapper
     
-# 
+# Wrapper for legacy username/password authentication.
+def password_auth_required(func):
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+
+        data = request.get_json() or {}
+
+        username = data.get("username")
+        password = data.get("password")
+
+        if not username or not password:
+            return {
+                "success": False,
+                "message": "Username or password missing"
+            }, 400
+
+        is_valid, error = verify_credentials_helper(username, password)
+
+        if not is_valid:
+            return {
+                "success": False,
+                "message": error
+            }, 401
+
+        user = fetch_user(username)
+
+        if user is None:
+            return {
+                "success": False,
+                "message": "User not found"
+            }, 401
+
+        g.user = {
+            "username": user[1],
+            "isAdmin": bool(user[3])
+        }
+
+        return func(*args, **kwargs)
+
+    return wrapper
+           
+
+def auth_required(func):
+
+    if AUTH_MODE == AuthenticationMode.JWT:
+        return token_required(func)
+
+    elif AUTH_MODE == AuthenticationMode.LEGACY:
+        return password_auth_required(func)
+
+    raise ValueError(f"Unsupported authentication mode: {AUTH_MODE}")

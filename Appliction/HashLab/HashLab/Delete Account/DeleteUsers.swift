@@ -105,7 +105,16 @@ struct DeleteUsers: View {
             Button("OK", role: .destructive) {
                 Task {
                     
-                    await viewModel.deleteUsers(viewModel.password)
+                    switch AppConfiguration.authenticationMode {
+                    case .JWT :
+                        
+                        await viewModel.deleteUsers(nil, viewModel.password)
+                        
+                    case .Legacy :
+                        
+                        await viewModel.deleteUsers(session.username, viewModel.password)
+                        
+                    }
                     
                     if viewModel.isDeleted {
                         showSuccessToast = true

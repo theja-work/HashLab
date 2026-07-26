@@ -52,8 +52,6 @@ struct LoginView : View {
                         
                         if let response = await viewModel.login() {
                             
-                            try KeychainManager.shared.saveToken(response.token)
-                            
                             session.login(
                                 as: UserSession(
                                     username: response.username,

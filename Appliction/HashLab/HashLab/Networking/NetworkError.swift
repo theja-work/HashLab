@@ -13,5 +13,6 @@ enum NetworkError: Error {
     case invalidResponse
     case decodingFailed
     case unauthorized
+    case authenticationRequired
     case serverError(Int)
 }

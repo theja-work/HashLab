@@ -29,8 +29,28 @@ final class NetworkManager {
         request.httpMethod = method.rawValue
         request.httpBody = body
         
-        if requiresAuth , let token = KeychainManager.shared.readToken() {
-            request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        
+        
+        if requiresAuth {
+            
+            switch AppConfiguration.authenticationMode {
+                
+            case .JWT :
+                
+                // Read access token
+
+                // If expired:
+                //     Refresh automatically
+                // Retry request
+                
+                if let token = KeychainManager.shared.readToken() {
+                    request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+                }
+                
+            case .Legacy : break
+                
+            }
+            
         }
         
         request.setValue(

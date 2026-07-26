@@ -26,13 +26,31 @@ final class SessionManager : ObservableObject {
     
     @MainActor
     func logout() async {
+        
+        switch AppConfiguration.authenticationMode {
+            
+        case .Legacy:
+            break
+            
+        case .JWT:
+            KeychainManager.shared.deleteToken()
+        }
+        
         user = nil
-        KeychainManager.shared.deleteToken()
     }
     
     @MainActor
     func accountDeleted() async {
+        
+        switch AppConfiguration.authenticationMode {
+            
+        case .Legacy:
+            break
+            
+        case .JWT:
+            KeychainManager.shared.deleteToken()
+        }
+        
         user = nil
-        KeychainManager.shared.deleteToken()
     }
 }

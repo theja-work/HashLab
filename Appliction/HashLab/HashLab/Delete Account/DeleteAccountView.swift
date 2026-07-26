@@ -113,7 +113,17 @@ struct DeleteAccountView: View {
             Button("OK", role: .destructive) {
                 Task {
                     
-                    await viewModel.deleteAccount(viewModel.password)
+                    switch AppConfiguration.authenticationMode {
+                    case .JWT :
+                        
+                        await viewModel.deleteAccount(nil, viewModel.password)
+                        
+                    case .Legacy :
+                        
+                        await viewModel.deleteAccount(session.username, viewModel.password)
+                    }
+                    
+                    
                     
                     if viewModel.isDeleted {
                         showSuccessToast = true

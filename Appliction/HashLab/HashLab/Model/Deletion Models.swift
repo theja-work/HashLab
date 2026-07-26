@@ -8,5 +8,6 @@
 import Foundation
 
 struct DeleteAccountRequestParams : Codable {
+    let username : String?
     let password : String
 }

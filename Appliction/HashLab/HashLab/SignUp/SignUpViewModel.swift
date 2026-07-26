@@ -52,7 +52,15 @@ class SignUpViewModel : ObservableObject {
             guard signupResponse.success else { return nil }
             
             let response = try await authService.loginService.login(username, password)
-            try KeychainManager.shared.saveToken(response.token)
+            switch AppConfiguration.authenticationMode {
+
+            case .Legacy:
+                break
+
+            case .JWT:
+                try KeychainManager.shared.saveToken(response.token)
+                
+            }
             return response
         }
         

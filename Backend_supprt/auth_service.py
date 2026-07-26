@@ -1,32 +1,15 @@
 
 from flask import Blueprint, request
-
 from auth import generate_jwt
+from credential_service import verify_credentials_helper
 from database import (
     fetch_user,
     create_user,
     count_admin_users,
         user_exists
 )
-from hashing import generate_hash
 
 auth_bp = Blueprint("auth", __name__)
-
-#
-def verify_credentials_helper(username, password):
-
-    user = fetch_user(username)
-
-    if user is None:
-        return False, "User does not exist"
-
-    stored_hash = user[2]
-    generated_hash = generate_hash(password)
-
-    if generated_hash != stored_hash:
-        return False, "Incorrect password"
-
-    return True, None
     
 #
 @auth_bp.route("/login", methods=["POST"])

@@ -41,7 +41,17 @@ class LoginViewModel : ObservableObject {
         do {
             
             let response = try await authService.login(username, password)
-            try KeychainManager.shared.saveToken(response.token)
+            
+            switch AppConfiguration.authenticationMode {
+
+            case .Legacy:
+                break
+
+            case .JWT:
+                try KeychainManager.shared.saveToken(response.token)
+                
+            }
+            
             return response
         }
         

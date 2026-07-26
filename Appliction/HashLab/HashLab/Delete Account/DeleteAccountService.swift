@@ -8,20 +8,16 @@
 import Foundation
 
 protocol DeleteAccountServiceProtocol {
-    func deleteAccount(_ password : String) async throws -> DeleteAccountModel
-    func deleteUsers(_ password : String) async throws -> DeleteUsersModel
+    func deleteAccount(_ username : String?,_ password : String) async throws -> DeleteAccountModel
+    func deleteUsers(_ username : String?, _ password : String) async throws -> DeleteUsersModel
 }
 
 final class DeleteAccountService : DeleteAccountServiceProtocol {
     
-    func deleteUsers(_ password: String) async throws -> DeleteUsersModel {
+    func deleteUsers(_ username : String?, _ password: String) async throws -> DeleteUsersModel {
         
-        let jsonBody = DeleteAccountRequestParams(password: password)
+        let jsonBody = DeleteAccountRequestParams(username: username, password: password)
         let body = try JSONEncoder().encode(jsonBody)
-        
-        if let json = String(data: body, encoding: .utf8) {
-            print(json)
-        }
         
         let (data, response) = try await NetworkManager.shared.request(endpoint: .deleteUsers, method: .DELETE, body: body , requiresAuth: true)
         
@@ -60,9 +56,9 @@ final class DeleteAccountService : DeleteAccountServiceProtocol {
         }
     }
     
-    func deleteAccount(_ password: String) async throws -> DeleteAccountModel {
+    func deleteAccount(_ username : String?, _ password: String) async throws -> DeleteAccountModel {
         
-        let jsonBody = DeleteAccountRequestParams(password: password)
+        let jsonBody = DeleteAccountRequestParams(username: username, password: password)
         let body = try JSONEncoder().encode(jsonBody)
         
         let (data, response) = try await NetworkManager.shared.request(endpoint: .deleteAccount, method: .DELETE, body: body , requiresAuth: true)
