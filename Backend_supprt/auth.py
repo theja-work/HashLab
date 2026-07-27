@@ -147,12 +147,18 @@ def password_auth_required(func):
 
 def auth_required(func):
 
-    if config.AUTH_MODE == AuthenticationMode.JWT:
-        return token_required(func)
+    @wraps(func)
+    def wrapper(*args, **kwargs):
 
-    elif config.AUTH_MODE == AuthenticationMode.LEGACY:
-        return password_auth_required(func)
+        if config.AUTH_MODE == AuthenticationMode.JWT:
+            return token_required(func)(*args, **kwargs)
 
-    raise ValueError(
-        f"Unsupported authentication mode: {config.AUTH_MODE}"
-    )
+        elif config.AUTH_MODE == AuthenticationMode.LEGACY:
+            return password_auth_required(func)(*args, **kwargs)
+
+        return {
+            "success": False,
+            "message": "Unsupported authentication mode"
+        }, 500
+
+    return wrapper
