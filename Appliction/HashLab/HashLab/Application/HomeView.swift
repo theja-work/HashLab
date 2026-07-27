@@ -10,6 +10,7 @@ import SwiftUI
 struct HomeView: View {
 
     @EnvironmentObject private var session : SessionManager
+    @StateObject private var viewModel = DeveloperSettingsViewModel(service: DeveloperSettingsService())
 
     var body: some View {
 
@@ -30,6 +31,12 @@ struct HomeView: View {
             }
             .padding(EdgeInsets(top: 0, leading: 0, bottom: 100, trailing: 0))
             .buttonStyle(.borderless)
+            
+            NavigationLink("Settings View") {
+                DeveloperSettingsView()
+            }
+            .buttonStyle(.borderedProminent)
+            .padding(EdgeInsets(top: 0, leading: 0, bottom: 50, trailing: 0))
             
             NavigationLink("Delete Account") {
                 DeleteAccountView()

@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>Base_URL</key>
-	<string>http://192.168.0.102:5000/</string>
+	<string>http://10.199.8.213:5000/</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>

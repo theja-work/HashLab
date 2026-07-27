@@ -7,7 +7,7 @@ import datetime
 
 from database import fetch_user
 from credential_service import verify_credentials_helper
-from config import AUTH_MODE
+import config
 from auth_mode import AuthenticationMode
 
 
@@ -147,10 +147,12 @@ def password_auth_required(func):
 
 def auth_required(func):
 
-    if AUTH_MODE == AuthenticationMode.JWT:
+    if config.AUTH_MODE == AuthenticationMode.JWT:
         return token_required(func)
 
-    elif AUTH_MODE == AuthenticationMode.LEGACY:
+    elif config.AUTH_MODE == AuthenticationMode.LEGACY:
         return password_auth_required(func)
 
-    raise ValueError(f"Unsupported authentication mode: {AUTH_MODE}")
+    raise ValueError(
+        f"Unsupported authentication mode: {config.AUTH_MODE}"
+    )

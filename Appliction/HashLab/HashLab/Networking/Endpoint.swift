@@ -13,6 +13,8 @@ enum Endpoint {
     case signup
     case deleteAccount
     case deleteUsers
+    case hashingMode
+    case authenticationMode
 
     var path: String {
 
@@ -29,6 +31,12 @@ enum Endpoint {
             
         case .deleteUsers :
             return "deleteUsers"
+            
+        case .authenticationMode :
+            return "authenticationMode"
+            
+        case .hashingMode :
+            return "hashingMode"
         }
     }
 
