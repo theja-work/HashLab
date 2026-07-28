@@ -1,349 +1,206 @@
-# 🔐 Hashing Demo
+# 🔐 HashLab
 
-A complete authentication demo application built using **SwiftUI**, **MVVM**, and a **Python Flask** backend to demonstrate secure login and signup workflows.
+> An interactive SwiftUI + Flask playground for exploring authentication, password hashing, authorization, and configurable security strategies through hands-on implementations.
 
-This project was created as a hands-on learning exercise to understand the complete authentication flow between an iOS application and a backend server, while following clean architecture principles and asynchronous networking.
-
----
-
-# 📱 Demo
-
-The application currently supports:
-
-- ✅ User Registration (Signup)
-- ✅ User Login
-- ✅ Password Hashing before storage
-- ✅ Local Flask Backend
-- ✅ JSON based REST APIs
-- ✅ SwiftUI MVVM Architecture
-- ✅ Async/Await Networking
-- ✅ Error Handling
-- ✅ Input Validation
+HashLab is a full-stack learning project built from scratch to explore the fundamentals of authentication, password hashing, authorization, and secure client-server communication. Instead of relying on authentication frameworks, the core security features are implemented manually to understand how they work under the hood.
 
 ---
 
-# 🏗️ Architecture
+## ✨ Features
 
-```
-                SwiftUI View
-                     │
-                     ▼
-              LoginViewModel
-                     │
-                     ▼
-               AuthService
-                     │
-                     ▼
-              URLSession API
-                     │
-                     ▼
-          Python Flask Backend
-                     │
-                     ▼
-              JSON Response
-                     │
-                     ▼
-              SwiftUI Updates
-```
+### 🔑 Authentication
+- User Signup
+- User Login
+- JWT Authentication
+- Legacy Username & Password Authentication
+- Runtime Authentication Mode Switching
+- Bearer Token Authorization
+- Secure JWT Storage using iOS Keychain
 
-The project follows the MVVM architecture to separate business logic from presentation logic.
+### 👤 User Management
+- Delete Own Account
+- Admin-only Delete All Non-Admin Users
+- Role-based Authorization
+- Maximum Admin Account Limit
 
-| Layer | Responsibility |
-|--------|---------------|
-| View | Displays UI and handles user interaction |
-| ViewModel | Business logic and state management |
-| Service | API communication |
-| Backend | Authentication and user management |
+### 🔒 Password Security
+- Custom hashing library written in C
+- Runtime Hashing Mode Switching
+- Plain Hashing
+- Username-based Deterministic Salting
+- Demonstrates how changing hashing strategies affects authentication
+
+### ⚙️ Developer Experience
+- Runtime Security Configuration
+- Developer Settings Screen
+- Loading Indicators
+- Success & Error Toasts
+- Modular Service Architecture
+
+### 🌐 Backend
+- Python Flask REST API
+- SQLite Database
+- Authentication Middleware
+- Configurable Runtime Security Modes
+
+### 📱 iOS Application
+- SwiftUI
+- MVVM Architecture
+- Async/Await Networking
+- Dependency Injection
+- Keychain Integration
 
 ---
 
-# 🚀 Tech Stack
+## 🛠 Tech Stack
 
 ### iOS
-
-- Swift 6
 - SwiftUI
-- MVVM
-- URLSession
+- Combine
 - Async/Await
+- MVVM
+- Keychain Services
 
 ### Backend
-
 - Python
 - Flask
-- REST APIs
-- JSON
-- Password Hashing
+- SQLite
+- PyJWT
+
+### Native
+- C (Custom Hashing Library)
 
 ---
 
-# 📂 Project Structure
+## 🎓 Learning Objectives
+
+HashLab focuses on understanding the building blocks of application security through practical implementation.
+
+It currently demonstrates:
+
+- Password Hashing
+- Password Salting
+- JWT Authentication
+- Bearer Token Authorization
+- Legacy Authentication
+- Authentication vs Authorization
+- Role-based Access Control
+- Secure Token Storage
+- Runtime Security Configuration
+- Client-Server Communication
+- REST API Design
+- SQLite Integration
+- Flask Middleware
+
+---
+
+## 🚀 Runtime Security Configuration
+
+One of HashLab's core features is the ability to switch security strategies **while the application is running**, making it easier to observe how different authentication and hashing approaches behave.
+
+### Authentication Modes
+
+- ✅ JWT Authentication
+- ✅ Legacy Username & Password Authentication
+
+### Password Hashing Modes
+
+- ✅ Plain Hashing
+- ✅ Username-Salted Hashing
+
+Changing these settings immediately affects newly executed authentication flows, allowing the project to demonstrate how different security configurations influence application behavior.
+
+---
+
+## 📂 Project Structure
 
 ```
-Hashing-Demo
+HashLab
 │
-├── SwiftUISample/
-│   ├── Models
+├── iOS
 │   ├── Views
 │   ├── ViewModels
+│   ├── Models
 │   ├── Services
-│   └── Resources
+│   ├── Networking
+│   └── Utilities
 │
-├── SwiftUI_backend_support/
+├── Backend
 │   ├── app.py
-│   ├── requirements.txt
-│   └── users.json
+│   ├── auth.py
+│   ├── auth_service.py
+│   ├── user_service.py
+│   ├── settings_service.py
+│   ├── credential_service.py
+│   ├── database.py
+│   ├── hashing.py
+│   ├── config.py
+│   ├── auth_mode.py
+│   └── hashing_mode.py
 │
-└── README.md
+└── Native
+    └── libhash.dylib
 ```
 
 ---
 
-# 🔄 Authentication Flow
+## 📸 Screenshots
 
-## Signup
+| Login | Home | Developer Settings |
+|-------|------|--------------------|
+| *(Add Screenshot)* | *(Add Screenshot)* | *(Add Screenshot)* |
 
-```
-User
-   │
-   ▼
-SwiftUI Form
-   │
-   ▼
-Signup ViewModel
-   │
-   ▼
-Signup Service
-   │
-   ▼
-POST /signup
-   │
-   ▼
-Flask Backend
-   │
-   ▼
-Password Hashing
-   │
-   ▼
-User Stored
-```
+| Delete Account | Delete Users | Runtime Security Modes |
+|----------------|--------------|------------------------|
+| *(Add Screenshot)* | *(Add Screenshot)* | *(Add Screenshot)* |
 
 ---
 
-## Login
+## 🗺️ Roadmap
 
-```
-User
-   │
-   ▼
-SwiftUI Form
-   │
-   ▼
-Login ViewModel
-   │
-   ▼
-Auth Service
-   │
-   ▼
-POST /login
-   │
-   ▼
-Flask Backend
-   │
-   ▼
-Password Verification
-   │
-   ▼
-Authentication Success
-```
+### ✅ Completed
 
----
-
-# 📡 REST APIs
-
-## Signup
-
-```
-POST /signup
-```
-
-### Request
-
-```json
-{
-    "username":"john",
-    "password":"123456"
-}
-```
-
-### Response
-
-```json
-{
-    "success":true
-}
-```
-
----
-
-## Login
-
-```
-POST /login
-```
-
-### Request
-
-```json
-{
-    "username":"john",
-    "password":"123456"
-}
-```
-
-### Response
-
-```json
-{
-    "success":true,
-    "token":"local-token-123"
-}
-```
-
----
-
-# ▶️ Running the Backend
-
-## Step 1
-
-Navigate to the backend folder
-
-```bash
-cd SwiftUI_backend_support
-```
-
-## Step 2
-
-Create a virtual environment
-
-```bash
-python3 -m venv venv
-```
-
-## Step 3
-
-Activate the virtual environment
-
-macOS/Linux
-
-```bash
-source venv/bin/activate
-```
-
-Windows
-
-```bash
-venv\Scripts\activate
-```
-
-## Step 4
-
-Install dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-## Step 5
-
-Start Flask server
-
-```bash
-python app.py
-```
-
-Server starts on
-
-```
-http://127.0.0.1:5000
-```
-
----
-
-# 📱 Running the iOS Application
-
-1. Open the project in Xcode.
-2. Select an iOS Simulator.
-3. Build and Run.
-4. Register a new user.
-5. Login using the same credentials.
-
----
-
-# 🧠 Learning Objectives
-
-This project demonstrates
-
-- SwiftUI application architecture
-- MVVM design pattern
-- Async/Await networking
-- REST API communication
-- JSON encoding & decoding
-- Backend integration
-- Password hashing
-- Authentication flow
-- Error handling
-- Clean code organization
-
----
-
-# 🔮 Future Enhancements
-
+- User Signup
+- User Login
+- SQLite Integration
 - JWT Authentication
+- Legacy Authentication
+- Runtime Authentication Switching
+- Plain & Salted Hashing
+- Runtime Hashing Switching
+- Role-based Authorization
+- Delete Account
+- Delete All Non-Admin Users
+- Secure JWT Storage using Keychain
+- Developer Settings Screen
+
+### 🚧 Planned
+
 - Refresh Tokens
-- Secure Keychain Storage
-- Biometric Authentication
-- Session Management
-- HTTPS Support
-- SSL Pinning
-- Unit Testing
-- UI Testing
-- Dockerized Backend
-- Database Integration
-- Token Expiration
-- Password Reset
-- Email Verification
+- Password Migration
+- Password Reset Flow
+- Hash Algorithm Versioning
+- Automatic Password Rehashing
+- Security Audit Logs
+- Rate Limiting
+- Performance Analysis using Instruments
+- Unit Tests
+- Integration Tests
 
 ---
 
-# 📷 Screenshots
+## 💡 Why HashLab?
 
-Coming Soon
+Many tutorials demonstrate authentication by integrating third-party libraries or cloud providers. HashLab takes a different approach by implementing the core concepts directly, making it easier to understand how authentication, authorization, password hashing, and runtime security configuration work together in a complete application.
 
-| Login | Signup | Success |
-|-------|---------|----------|
-| Add Screenshot | Add Screenshot | Add Screenshot |
+The goal isn't to build a production-ready authentication framework, but to create a practical learning environment where security concepts can be explored, modified, and observed through real code.
 
 ---
 
-# 🤝 Contributions
+## 📜 License
 
-This project is primarily intended for learning and demonstration purposes.
-
-Suggestions and improvements are always welcome.
+This project is intended for educational and learning purposes.
 
 ---
 
-# 📄 License
-
-This project is licensed under the MIT License.
-
----
-
-# 👨‍💻 Author
-
-**Thejas K**
-
-Senior iOS Developer
-
-Built with ❤️ using SwiftUI and Flask.
+**Built with SwiftUI, Python, SQLite, and C to explore authentication from the ground up. 🚀**
