@@ -11,7 +11,10 @@ def verify_credentials_helper(username, password):
         return False, "User does not exist"
 
     stored_hash = user[2]
-    generated_hash = generate_hash(password)
+    generated_hash = generate_hash(
+                        password,
+                        username
+                    )
 
     if generated_hash != stored_hash:
         return False, "Incorrect password"

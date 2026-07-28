@@ -40,7 +40,10 @@ def fetch_user(username):
 # Creates user with given username, password and isAdmin role
 def create_user(username, password , is_admin=0):
 
-    password_hash = generate_hash(password)
+    password_hash = generate_hash(
+                        password,
+                        username
+                    )
 
     conn = get_connection()
 

@@ -20,6 +20,9 @@ struct DeveloperSettingsView: View {
         service: DeveloperSettingsService()
     )
     
+    @State private var showToast = false
+    @State private var toastMessage = ""
+    
     var body: some View {
         
         NavigationStack {
@@ -42,10 +45,47 @@ struct DeveloperSettingsView: View {
                         .controlSize(.large)
                 }
                 
+                if showToast {
+                    
+                    VStack {
+                        
+                        Spacer()
+                        
+                        Text(toastMessage)
+                            .font(.subheadline)
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 12)
+                            .background(.black.opacity(0.85))
+                            .clipShape(Capsule())
+                            .padding(.bottom, 30)
+                    }
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
+                }
             }
+            .animation(.easeInOut, value: showToast)
             .navigationTitle("Developer Settings")
         }
-        
+        .onChange(of: viewModel.toastMessage) { oldValue, newValue in
+            guard let message = newValue else { return }
+            showToast(message)
+        }
+    }
+    
+    private func showToast(_ message: String) {
+
+        toastMessage = message
+
+        withAnimation {
+            showToast = true
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+
+            withAnimation {
+                showToast = false
+            }
+        }
     }
     
     private var authenticationSection: some View {
