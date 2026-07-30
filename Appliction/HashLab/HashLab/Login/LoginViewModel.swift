@@ -50,6 +50,21 @@ class LoginViewModel : ObservableObject {
             case .JWT:
                 try KeychainManager.shared.saveToken(response.token)
                 
+                if let token = KeychainManager.shared.readToken(),
+                   let payload = JWTDecoder.decode(token: token) {
+
+                    Logger.log(payload.username)
+                    Logger.log(payload.isAdmin)
+                    Logger.log(payload.exp)
+                    
+                    let dateFormat = DateFormatter()
+                    dateFormat.dateFormat = "yyyy-MM-dd HH:mm a"
+                    
+                    let date = Date(timeIntervalSince1970: payload.exp)
+                    let formattedDate = dateFormat.string(from: date)
+                    Logger.log(formattedDate)
+                }
+                
             }
             
             return response

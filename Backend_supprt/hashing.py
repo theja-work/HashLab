@@ -49,9 +49,6 @@ def generate_hash(password, username=None):
     else:
         raise ValueError("Unsupported hashing mode.")
 
-    # Temporary debug
-    print(f"Hash Input : {input_string}")
-
     return lib.hash_string(
         input_string.encode("utf-8")
     )

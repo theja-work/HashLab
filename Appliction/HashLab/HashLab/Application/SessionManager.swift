@@ -53,4 +53,25 @@ final class SessionManager : ObservableObject {
         
         user = nil
     }
+    
+    @MainActor
+    func restoreSession() {
+        
+        guard let token = KeychainManager.shared.readToken() else {
+            return
+        }
+        
+        guard let payload = JWTDecoder.decode(token: token) else {
+            KeychainManager.shared.deleteToken()
+            return
+        }
+        
+        guard payload.exp > Date().timeIntervalSince1970 else {
+
+            KeychainManager.shared.deleteToken()
+            return
+        }
+        
+        user = UserSession(username: payload.username, isAdmin: payload.isAdmin)
+    }
 }

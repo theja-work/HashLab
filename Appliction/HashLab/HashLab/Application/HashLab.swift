@@ -16,6 +16,9 @@ struct HashLab: App {
         WindowGroup {
             RootView()
                 .environmentObject(session)
+                .task {
+                    session.restoreSession()
+                }
         }
     }
 }
